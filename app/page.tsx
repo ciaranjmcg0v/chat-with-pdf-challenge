@@ -60,18 +60,18 @@ export default function Home() {
             </h2>
 
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Transform your PDF's into interactive conversations
+              Transform your PDFs into interactive conversations
             </p>
 
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Introducing{" "}
+              Introducing
               <span className="font-bold text-indigo-600">Chat with PDF.</span>
               <br />
               <br />
               Upload your document, and our chatbot will answer questions,
               summarize content and answer all your Qs. Ideal for everyone,
               <span className="text-indigo-600"> Chat with PDF</span> turns
-              static documents into{" "}
+              static documents into
               <span className="font-bold">dynamic conversations</span>,
               enhancing productivity 10x fold effortlessly.
             </p>
