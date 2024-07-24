@@ -14,7 +14,7 @@ import {
 const features = [
   {
     name: "Store your PDF documents",
-    description: "Keep all your important files scurely stored",
+    description: "Keep all your important files securely stored, ready to be accessed anytime.",
     icon: GlobeIcon,
   },
   {
@@ -65,7 +65,7 @@ export default function Home() {
 
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Introducing
-              <span className="font-bold text-indigo-600">Chat with PDF.</span>
+              <span className="font-bold text-indigo-600"> Chat with PDF.</span>
               <br />
               <br />
               Upload your document, and our chatbot will answer questions,
@@ -100,11 +100,14 @@ export default function Home() {
         <div className="mx-auto mt-16 max-w-7xl px-6 sm:mt-20 md:mt-24 lg:px-8">
           <dl className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
             {features.map((feature) => (
-              <div key={feature.name} className="relative pl-9">
+              <div
+                key={feature.name}
+                className="relative pl-9 border border-gray-300 rounded-lg hover:bg-gray-100 shadow-lg cursor-pointer select-none hover:scale-105 transition-all"
+              >
                 <dt className="inline font-semibold text-gray-900">
                   <feature.icon
                     aria-hidden="true"
-                    className="absolute left-1 top-1 h-5 w-5 text-indigo-600"
+                    className="absolute left-2 top-1/2 translate-y-[-50%] h-5 w-5 text-indigo-600"
                   />
                 </dt>
                 <dd>{feature.description}</dd>
