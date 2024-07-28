@@ -8,14 +8,6 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Loader2Icon, RotateCw, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 
-// We need to configure CORS
-// gsutil cors set cors.json gs://<app-name>.appspot.com
-// gsutil cors set cors.json gs://chat-with-pdf-challenge-1cb46.appspot.com
-// go here >>> https://console.cloud.google.com/
-// create new file in editor calls cors.json
-// run >>> // gsutil cors set cors.json gs://chat-with-pdf-challenge-1cb46.appspot.com
-// https://firebase.google.com/docs/storage/web/download-files#cors_configuration
-
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function PdfView({ url }: { url: string }) {
@@ -23,16 +15,16 @@ function PdfView({ url }: { url: string }) {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [file, setFile] = useState<Blob | null>(null);
   const [rotation, setRotation] = useState<number>(0);
-  const [scale, setScale] = useState<number>(1);
+  const [scale, setScale] = useState<number>(0.7);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFile = async () => {
       try {
         const response = await fetch(url);
-        console.log("Response status:", response.status);
-        console.log("Response headers:", response.headers);
-        console.log("🚀 ~ fetchFile ~ url:", url);
+        console.log("Status:", response.status);
+        console.log("Headers:", response.headers);
+        console.log("Downloading from url:", url);
         const file = await response.blob();
         setFile(file);
       } catch (error) {
@@ -48,8 +40,8 @@ function PdfView({ url }: { url: string }) {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <div className="sticky top-0 z-50 bg-gray-100 p-2 rounded-b-lg">
+    <div className="flex flex-col justify-center items-center bg-gray-100 dark:bg-gray-600">
+      <div className="sticky top-0 z-50 bg-gray-100 dark:bg-gray-600 p-2 rounded-b-lg">
         <div className="max-w-6xl px-2 grid grid-cols-6 gap-2">
           <Button
             variant="outline"
@@ -96,7 +88,7 @@ function PdfView({ url }: { url: string }) {
 
           <Button
             variant="outline"
-            disabled={scale <= 0.75}
+            disabled={scale <= 0.2}
             onClick={() => setScale(scale / 1.2)}
           >
             <ZoomOutIcon />

@@ -1,21 +1,30 @@
 "use client";
 
-import { askQuestion } from "@/actions/askQuestion";
-import { db } from "@/firebase";
-import { Message } from "@/lib/types";
-import { useUser } from "@clerk/nextjs";
-import { collection, orderBy, query } from "firebase/firestore";
-import { Loader2Icon } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
-import { useCollection } from "react-firebase-hooks/firestore";
-import ChatMessage from "./ChatMessage";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { ArrowRight, Loader2Icon } from "lucide-react";
+// import ChatMessage from "./ChatMessage";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { useUser } from "@clerk/nextjs";
+import { collection, orderBy, query } from "firebase/firestore";
+import { db } from "@/firebase";
+import { askQuestion } from "@/actions/askQuestion";
+import ChatMessage from "./ChatMessage";
+import { useToast } from "./ui/use-toast";
+
+export type Message = {
+  id?: string;
+  role: "human" | "ai" | "placeholder";
+  message: string;
+  createdAt: Date;
+};
 
 function Chat({ id }: { id: string }) {
   const { user } = useUser();
+  const { toast } = useToast();
 
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isPending, startTransition] = useTransition();
   const bottomOfChatRef = useRef<HTMLDivElement>(null);
@@ -37,10 +46,11 @@ function Chat({ id }: { id: string }) {
   useEffect(() => {
     if (!snapshot) return;
 
-    console.log("updated snapshot", snapshot.docs);
+    console.log("Updated snapshot", snapshot.docs);
 
-    // get second last message to check if the ai is thinking
+    // get second last message to check if the AI is thinking
     const lastMessage = messages.pop();
+
     if (lastMessage?.role === "ai" && lastMessage.message === "Thinking...") {
       // return as this is a dummy placeholder message
       return;
@@ -56,7 +66,10 @@ function Chat({ id }: { id: string }) {
         createdAt: createdAt.toDate(),
       };
     });
+
     setMessages(newMessages);
+
+    // Ignore messages dependancy warning here... we dont want an infinite loop
   }, [snapshot]);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -84,14 +97,21 @@ function Chat({ id }: { id: string }) {
     startTransition(async () => {
       const { success, message } = await askQuestion(id, q);
 
+      console.log("DEBUG", success, message);
+
       if (!success) {
-        // toast..
+        toast({
+          variant: "destructive",
+          title: "Uh oh.. you've reached your free limit",
+          description: message,
+          duration: 5000,
+        });
 
         setMessages((prev) =>
           prev.slice(0, prev.length - 1).concat([
             {
               role: "ai",
-              message: `Whoops.. ${message}`,
+              message: `Whoops... ${message}`,
               createdAt: new Date(),
             },
           ])
@@ -102,14 +122,13 @@ function Chat({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col h-full overflow-scroll">
-      {/* Chat Contents */}
-
+      {/* Chat contents */}
       <div className="flex-1 w-full">
-        {/* Chat Messages */}
+        {/* chat messages... */}
 
         {loading ? (
-          <div>
-            <Loader2Icon className="animate-spin h-20 w-20 text-indigo mt-20" />
+          <div className="flex items-center justify-center">
+            <Loader2Icon className="animate-spin h-20 w-20 text-indigo-600 mt-20" />
           </div>
         ) : (
           <div className="p-5">
@@ -118,7 +137,7 @@ function Chat({ id }: { id: string }) {
                 key={"placeholder"}
                 message={{
                   role: "ai",
-                  message: "What would you like to know about this document?",
+                  message: "Ask me anything about the document!",
                   createdAt: new Date(),
                 }}
               />
@@ -127,6 +146,8 @@ function Chat({ id }: { id: string }) {
             {messages.map((message, index) => (
               <ChatMessage key={index} message={message} />
             ))}
+
+            <div ref={bottomOfChatRef} />
           </div>
         )}
       </div>
@@ -136,16 +157,22 @@ function Chat({ id }: { id: string }) {
         className="flex sticky bottom-0 space-x-2 p-5 bg-indigo-600/75"
       >
         <Input
-          placeholder="Ask a question.."
+          placeholder="Ask a Question..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="bg-white"
+          className="placeholder:text-white text-gray-200"
         />
-        <Button type="submit" disabled={!input || isPending}>
+
+        <Button
+          type="submit"
+          disabled={!input || isPending}
+          className="bg-transparent hover:bg-transparent hover:text-yellow-500 hover:scale-105 rounded-none shadow-none drop-shadow-none"
+          title={!input || isPending ? "" : "Ask question"}
+        >
           {isPending ? (
-            <Loader2Icon className="animate=spin text-indigo-600" />
+            <Loader2Icon className="animate-spin text-indigo-600" />
           ) : (
-            "Ask"
+            <ArrowRight className="w-5 h-5" />
           )}
         </Button>
       </form>

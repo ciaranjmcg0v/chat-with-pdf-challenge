@@ -1,7 +1,12 @@
 "use client";
 
+import { deleteDocument } from "@/actions/deleteDocument";
+import useSubscription from "@/hooks/useSubscription";
+import { ArrowRightCircle, DownloadCloud, Trash2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { Document, pdfjs, Thumbnail } from "react-pdf";
+import { Button } from "./ui/button";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 function DocumentViewer({
@@ -18,28 +23,85 @@ function DocumentViewer({
   downloadUrl: string;
 }) {
   const router = useRouter();
+  const [isDeleting, startTransition] = useTransition();
+  const { hasActiveMembership } = useSubscription();
 
   return (
-    <div className="flex flex-col w-64 h-80 rounded-xl bg-white drop-shadow-md justify-between p-4 transition-all transform hover:scale-105 hover:bg-indigo-600 hover:text-white cursor-pointer group">
-      <div
-        className="flex-1"
-        onClick={() => {
-          router.push(`/dashboard/files/${id}`);
-        }}
-      >
+    <div className="relative flex flex-col w-72 h-80 rounded-xl bg-gray-100 border dark:bg-gray-600 drop-shadow-md justify-evenly p-4 transition-all transform hover:border-indigo-600/40 dark:hover:border-indigo-600/80 cursor-pointer group">
+      <div className="flex flex-col">
         <p className="font-semibold line-clamp-2">{name}</p>
-        <p className="text-sm text-gray-500 group-hover:text-indigo-100">
-          {size}
-        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-300">{size}</p>
       </div>
-      <div className="flex rounded-lg">
+
+      {/* Document */}
+      <div className="flex rounded-lg h-48">
         <Document
           loading={null}
           file={downloadUrl}
-          className="h-60 w-52 overflow-hidden rounded-lg"
+          className="h-full w-full overflow-hidden rounded-lg"
         >
-          <Thumbnail className="shadow-lg" pageNumber={1} />
+          <Thumbnail
+            className="shadow-lg flex justify-center items-center"
+            pageNumber={1}
+            scale={0.3}
+          />
         </Document>
+      </div>
+
+      {/* Actions */}
+      <div className="absolute -top-6 -left-6 -right-6 flex items-center justify-between z-50 space-x-2">
+        <Button
+          variant="outline"
+          asChild
+          title="Download"
+          className="bg-transparent h-8 w-8 p-0 rounded-full hover:bg-white"
+        >
+          <a href={downloadUrl} download target="_blank" rel="no-reffer">
+            <DownloadCloud className="h-4 w-4 text-indigo-600" />
+          </a>
+        </Button>
+
+        <Button
+          disabled={isDeleting || !hasActiveMembership}
+          onClick={() => {
+            const prompt = window.confirm(
+              "Are you sure you want to delete this document?"
+            );
+            if (prompt) {
+              // delete document
+              startTransition(async () => {
+                // Delete the document from Firestore
+                await deleteDocument(id);
+              });
+            }
+          }}
+          title="Delete"
+          className="flex items-center justify-center w-8 h-8 p-0 bg-transparent rounded-full shadow-none border "
+        >
+          {isDeleting ? (
+            <span className="loading loading-spinner text-primary"></span>
+          ) : (
+            <Trash2Icon className="h-4 w-4 text-red-500 z-50" />
+          )}
+          {!hasActiveMembership && (
+            <span className="text-red-500 ml-2">PRO feature</span>
+          )}
+        </Button>
+      </div>
+
+      {/* Select document */}
+      <div className="absolute -bottom-6 -right-6 z-50">
+        <Button
+          variant="outline"
+          asChild
+          title="View"
+          className="bg-transparent h-8 w-8 p-0 rounded-full hover:bg-indigo-600"
+          onClick={() => {
+            router.push(`/dashboard/files/${id}`);
+          }}
+        >
+          <ArrowRightCircle className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

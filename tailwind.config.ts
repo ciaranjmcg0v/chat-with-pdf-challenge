@@ -19,6 +19,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+      montserrat: ['Montserrat', 'sans-serif'],
+      deliciousHandrawn: ['Delicious Handrawn', 'cursive'],
+    },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

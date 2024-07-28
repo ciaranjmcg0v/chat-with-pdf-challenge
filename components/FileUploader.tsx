@@ -23,26 +23,29 @@ function FileUploader() {
     }
   }, [fileId, router]);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    const { lastModified, name, size, type } = file;
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      const { lastModified, name, size, type } = file;
 
-    if (file) {
-      // get and format file information (useful for analytics)
-      const fileDetails = {
-        name,
-        "last modified": new Date(lastModified).toISOString(),
-        size: formatFileSize(size),
-        type: determineFileType(type),
-      };
-      // log file details to console, if needed for debugging/verification
-      console.log(fileDetails);
+      if (file) {
+        // get and format file information (useful for analytics)
+        const fileDetails = {
+          name,
+          "last modified": new Date(lastModified).toISOString(),
+          size: formatFileSize(size),
+          type: determineFileType(type),
+        };
+        // log file details to console, if needed for debugging/verification
+        console.log(fileDetails);
 
-      await handleUpload(file);
-    } else {
-      // toast
-    }
-  }, []);
+        await handleUpload(file);
+      } else {
+        // toast
+      }
+    },
+    [handleUpload]
+  );
 
   const statusIcons: {
     [key in StatusText]: JSX.Element;
@@ -77,7 +80,7 @@ function FileUploader() {
       {uploadInProgress && (
         <div className="mt-32 flex flex-col justify-center items-center gap-5">
           <div
-            className={`radial-progress bg-indigo-300 text-white border-indigo-600 border-4 ${
+            className={`radial-progress bg-indigo-300 dark:bg-indigo-800 text-white border-indigo-600 border-4 ${
               progress === 100 && "hidden"
             }`}
             role="progressbar"
@@ -100,9 +103,11 @@ function FileUploader() {
       {!uploadInProgress && (
         <div
           {...getRootProps()}
-          className={`p-10 border-2 border-dashed mt-10 w-[90%] border-indigo-600 text-indigo-600 rounded-lg h-96 flex items-center justify-center ${
-            isFocused || isDragAccept ? "bg-indigo-300" : "bg-indigo-100"
-          }`}
+          className={`p-10 border-2 border-dashed mt-10 w-[90%] border-indigo-600 text-indigo-600 dark:text-indigo-900 rounded-lg h-96 flex items-center justify-center ${
+            isFocused || isDragAccept
+              ? "bg-indigo-300 dark:bg-indigo-700"
+              : "bg-indigo-100 dark:bg-indigo-500"
+          } cursor-pointer`}
         >
           <input {...getInputProps()} />
           <div className="flex flex-col items-center justify-center">

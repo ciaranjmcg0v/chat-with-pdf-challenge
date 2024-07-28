@@ -1,84 +1,51 @@
 import { Button } from "@/components/ui/button";
+import { features } from "@/data/landing";
+import {
+  ArrowRight
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-  BrainCogIcon,
-  EyeIcon,
-  GlobeIcon,
-  MonitorSmartphoneIcon,
-  ServerCogIcon,
-  ZapIcon,
-} from "lucide-react";
-
-const features = [
-  {
-    name: "Store your PDF documents",
-    description: "Keep all your important files securely stored, ready to be accessed anytime.",
-    icon: GlobeIcon,
-  },
-  {
-    name: "Blazing Fast Responses",
-    description:
-      "Experience lightning-fast answers to your queries, ensuring you get the information you need instantly",
-    icon: ZapIcon,
-  },
-  {
-    name: "Chat Memorisation",
-    description:
-      "Our intelligent chatbot remembers previous interactions, providing a seamless and presonalized experience",
-    icon: BrainCogIcon,
-  },
-  {
-    name: "Interactive PDF Viewer",
-    description:
-      "Engage with your PDF's like never before using our intuitive and interactive viewer",
-    icon: EyeIcon,
-  },
-  {
-    name: "Cloud Backup",
-    description:
-      "Rest assured knowing your documents are safely backed up on the cloud, protected from loss or damage",
-    icon: ServerCogIcon,
-  },
-  {
-    name: "Responsive Across Devices",
-    description:
-      "Access and chat with your PDF's seamlessly on any device, whether it's your desktop, tablet, or smartphone.",
-    icon: MonitorSmartphoneIcon,
-  },
-];
 
 export default function Home() {
   return (
-    <main className="flex-1 overflow-y-scroll p-2 lg:p-5 bg-gradient-to-bl from-white to-indigo-600">
-      <div className="bg-white py-24 sm:py-32 rounded-md drop-shadow-xl">
+    <main className="flex-1 overflow-y-scroll p-2 lg:p-5 bg-gradient-to-bl from-white to-[#7c3aed] select-none">
+      <div className="py-12 sm:py-16 rounded-md drop-shadow-xl">
         <div className="flex flex-col justify-center items-center mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-base font-semibold leading-7 text-indigo-600">
-              Your interactive document companion
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-6xl sm:text-7xl font-semibold leading-7 text-[#7c3aed]">
+              PDF Toolkit
             </h2>
 
-            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            {/* Custom Font - handwriting style */}
+            <p className="mt-12 text-5xl font-deliciousHandrawn tracking-tight text-red-500 sm:text-4xl">
               Transform your PDFs into interactive conversations
             </p>
 
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Introducing
-              <span className="font-bold text-indigo-600"> Chat with PDF.</span>
-              <br />
-              <br />
-              Upload your document, and our chatbot will answer questions,
-              summarize content and answer all your Qs. Ideal for everyone,
-              <span className="text-indigo-600"> Chat with PDF</span> turns
-              static documents into
-              <span className="font-bold">dynamic conversations</span>,
-              enhancing productivity 10x fold effortlessly.
-            </p>
+            <div className="mt-6">
+              <div className="opacity-70 transition-opacity duration-1000 bg-gradient-to-r from-purple-100 to-gray-200 p-6 rounded-lg shadow-lg hover:opacity-100">
+                <p className="text-black">
+                  Upload your document and let our intelligent chatbot transform
+                  your experience. It will answer your questions, summarize
+                  content, and provide detailed insights effortlessly. Perfect
+                  for anyone,{" "}
+                  <span className="text-[#7c3aed] font-bold">PDF Toolkit</span>{" "}
+                  brings your static documents to life, turning them into{" "}
+                  <span className="font-bold">dynamic conversations</span>.
+                  Enhance your productivity tenfold with features like real-time
+                  Q&A, detailed summaries, content extraction, and more.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <Button asChild className="mt-10">
-            <Link href="/dashboard">Get Started</Link>
+          <Button
+            asChild
+            className="mt-10 hover:border border-white hover:bg-purple-500 hover:scale-110 transition-all transform hover:animate-bounce"
+          >
+            <Link href="/dashboard">
+              Get Started <ArrowRight className="w-5 h-5 text-white dark:text-black ml-2" />{" "}
+            </Link>
           </Button>
         </div>
 
@@ -92,25 +59,29 @@ export default function Home() {
               className="mb-[-0%] rounded-xl shadow-2xl ring-1 ring-gray-900/10"
             />
             <div aria-hidden="true" className="relative">
-              <div className="absolute bottom-0 -inset-x-32 bg-gradient-to-t from-white/95 pt-[5%]" />
+              <div className="absolute bottom-0 left-0 right-0 rounded-lg -inset-x-32 bg-gradient-to-t from-purple-400/60 pt-[5%]" />
             </div>
           </div>
         </div>
 
         <div className="mx-auto mt-16 max-w-7xl px-6 sm:mt-20 md:mt-24 lg:px-8">
-          <dl className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
+          <dl
+            className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-10 text-base leading-7 text-gray-600 sm:grid-cols-2 lg:mx-0 lg:max-w-none 
+          lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16"
+          >
+            {/* Feature Cards */}
             {features.map((feature) => (
               <div
                 key={feature.name}
-                className="relative pl-9 border border-gray-300 rounded-lg hover:bg-gray-100 shadow-lg cursor-pointer select-none hover:scale-105 transition-all"
+                className="flex flex-col items-center justify-center border border-indigo-500/30 rounded-lg shadow-lg cursor-pointer select-none hover:scale-105 transition-all bg-white/70 p-4"
               >
-                <dt className="inline font-semibold text-gray-900">
+                <dt className="flex items-center justify-center p-2 font-semibold text-gray-900">
                   <feature.icon
                     aria-hidden="true"
-                    className="absolute left-2 top-1/2 translate-y-[-50%] h-5 w-5 text-indigo-600"
+                    className="h-5 w-5 text-[#7c3aed]"
                   />
                 </dt>
-                <dd>{feature.description}</dd>
+                <dd className="pb-2 text-center">{feature.description}</dd>
               </div>
             ))}
           </dl>

@@ -13,3 +13,8 @@ export type Message = {
   message: string;
   createdAt: Date;
 };
+
+export type UserDetails = {
+  email: string;
+  name: string;
+}

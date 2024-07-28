@@ -1,10 +1,9 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
-
 
 export const formatFileSize = (size: number): string => {
   if (size < 1024) return `${size} bytes`;
@@ -21,3 +20,8 @@ export const determineFileType = (type: string): string => {
   if (type.startsWith("pdf/")) return "PDF";
   return "Other";
 };
+
+export const getBaseUrl = () =>
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : `https://${process.env.VERCEL_URL}`;

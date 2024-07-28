@@ -20,7 +20,7 @@ async function Documents() {
     .get();
 
   return (
-    <div className="flex flex-wrap p-5 justify-center lg:justify-start rounded-sm gap-5 max-w-7xl mx-auto">
+    <div className="flex flex-wrap p-10 justify-center lg:justify-start rounded-sm gap-20 max-w-7xl mx-auto">
       {/* Map through the documents */}
 
       {documentSnapshot.docs.map((doc) => {
